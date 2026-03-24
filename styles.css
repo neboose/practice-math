@@ -1,0 +1,32 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Verdana', sans-serif;
+    margin: 8px;
+}
+
+p {
+    margin: 1em 0;
+}
+
+.lesson {
+    margin: 1.5em 0;
+}
+
+.lesson .lesson-text {
+    font-family: serif;
+    font-size: 1.2em;
+    border: 2px solid #999;
+    border-radius: 1em;
+    padding: 6px;
+    font-weight: 700;
+}
+
+.lesson a {
+    padding-left: 2px;
+    padding-right: 1em;
+}
