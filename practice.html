@@ -8,41 +8,127 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script>
             document.addEventListener("DOMContentLoaded", function() {
+
+                function pickRandom(n) {
+                    return Math.floor(Math.random() * n) + 1;
+                }
+
+                function positive(n) {
+                    let out = n;
+                    if (n < 0)
+                    {
+                        out = -out;
+                    }
+                    if (n == 0)
+                    {
+                        out += 1;
+                    }
+                    return out;
+                }
+
                 const question = document.getElementById("question");
                 const form = document.getElementById("form");
                 const answer = document.getElementById("answer");
+                const result = document.getElementById("result");
+                const score = document.getElementById("score");
+                const time = document.getElementById("time");
+                let current_minutes = 0;
+                let current_seconds = 0;
                 let correct_answer;
+                let current_score = 0;
                 const lesson = new URLSearchParams(window.location.search).get("l");
+
                 function startQuestions() {
                     newQuestion();
                     form.addEventListener("submit", function(event) {
                         event.preventDefault();
-                        newQuestion();
+                        if (answer.value == correct_answer)
+                        {
+                            result.innerHTML = "Yes!";
+                            current_score++;
+                            newQuestion();
+                        }
+                        else
+                        {
+                            if (current_score > 0)
+                            {
+                                current_score--;
+                            }
+                            result.innerHTML = "Try again.";
+                        }
+                        score.innerHTML = `Score: ${current_score}`;
                     });
+                    setInterval(function() {
+                        current_seconds += 1;
+                        if (current_seconds == 60)
+                        {
+                            current_minutes++;
+                            current_seconds = 0;
+                        }
+                        time.innerHTML = `Time: ${current_minutes}:${String(current_seconds).padStart(2, "0")}`;
+                    }, 1000);
                 }
+
                 switch(lesson)
                 {
                     case "1.2": {
                         function newQuestion() {
-                            question.innerHTML = "Is 1/2 and 2/4 equivalent? (y/n)";
-                            correct_answer = "y";
+                            const comparisonTrue = pickRandom(2) - 1;
+                            const multiplier = pickRandom(2) + 1;
+                            const f1d = pickRandom(4) + 1;
+                            const f1n = pickRandom(f1d - 1);
+                            const f2d = f1d * multiplier;
+                            let f2n = f1n * multiplier;
+                            if (!comparisonTrue)
+                            {
+                                if (pickRandom(2) - 1)
+                                {
+                                    f2n += pickRandom(2);
+                                }
+                                else
+                                {
+                                    f2n -= pickRandom(2);
+                                }
+                            }
+                            f2n = positive(f2n);
+                            question.innerHTML = `Is <span class="fraction"><span>${f1n}</span><span>${f1d}</span>
+                            </span> and <span class="fraction"><span>${f2n}</span>
+                            <span>${f2d}</span></span> equivalent? (y/n)`;
+                            if (comparisonTrue) 
+                            { 
+                                correct_answer = "y";
+                            }
+                            else 
+                            {
+                                correct_answer = "n";
+                            }
                         }
                         break;
                     }
                     case "1.3": { 
                         function newQuestion() {
-                            question.innerHTML = "Fill in the blank: 1/2 is equal to _/4";
-                            correct_answer = "2";
+                            const multiplier = pickRandom(2) + 1;
+                            const f1d = pickRandom(4) + 1;
+                            const f1n = pickRandom(f1d - 1);
+                            const f2d = f1d * multiplier;
+                            question.innerHTML = `Fill in the blank: <span class="fraction"><span>${f1n}</span><span>${f1d}
+                                </span></span> is equivalent to <span class="fraction"><span>_</span><span>${f2d}</span></span>.`;
+                            correct_answer = f1n * multiplier;
                         }
                         break;
                     }
                     case "2.3": { 
                         function newQuestion() {
-                            question.innerHTML = "Fill in the blank: 3/2 is equal to _/4";
-                            correct_answer = "6";
+                            const multiplier = pickRandom(2) + 1;
+                            const f1d = pickRandom(4) + 1;
+                            const f1n = pickRandom(3 * f1d) + f1d;
+                            const f2d = f1d * multiplier;
+                            question.innerHTML = `Fill in the blank: <span class="fraction"><span>${f1n}</span><span>${f1d}
+                                </span></span> is equivalent to <span class="fraction"><span>_</span><span>${f2d}</span></span>.`;
+                            correct_answer = f1n * multiplier;
                         }
-                        break;
                     }
+                    break;
                 }
                 startQuestions();
             });
@@ -51,12 +137,17 @@
     </head>
 
     <body>
+        <a href=".">&leftarrow; Back</a>
+        <p id="score">Score: 0</p>
+        <p id="time">Time: 0:00</p>
+        <p id="result"></p>
         <header>
             <h1>Practice</h1>
         </header>
         <div id="question"></div>
         <form id="form">
             <input id="answer">
+            <button type="submit">Check Answer</button>
         </form>
     </body>
 </html>

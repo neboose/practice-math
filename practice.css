@@ -5,3 +5,14 @@ h1 {
 #question {
     margin: 3em 0;
 }
+
+.fraction {
+    display: inline-flex;
+    flex-direction: column;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.fraction :first-child {
+    text-decoration-line: underline;
+}
